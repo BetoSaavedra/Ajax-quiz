@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quiz: Posiciones en la cancha</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+  h1 { text-align: center; color: #1e3a8a; }
+  .question { margin-bottom: 20px; }
+  .options button { display: block; margin: 8px 0; padding: 10px; width: 100%; font-size: 16px; cursor: pointer; }
+  .options button:hover { background-color: #e0e7ff; }
+  .correct { background-color: #4ade80 !important; }
+  .wrong { background-color: #f87171 !important; }
+  #result { font-weight: bold; margin-top: 20px; font-size: 18px; }
+</style>
+</head>
+<body>
+
+<h1>Quiz: Posiciones en la cancha</h1>
+<div id="quiz-container"></div>
+<div id="result"></div>
+
+<script>
+const quizData = [
+  {
+    question: "¿Qué posición juega normalmente el \"9\"?",
+    options: ["Defensa", "Delantero", "Mediocampista", "Portero"],
+    answer: 1
+  },
+  {
+    question: "¿Cuál es la función principal del mediocampista?",
+    options: [
+      "Defender el arco",
+      "Atacar y defender, conectar al equipo",
+      "Marcar goles",
+      "Sacar tiros libres"
+    ],
+    answer: 1
+  },
+  {
+    question: "¿Dónde suele ubicarse el lateral en la cancha?",
+    options: [
+      "En el centro del campo",
+      "En las bandas, a los lados de la defensa",
+      "En la delantera",
+      "En el área del portero"
+    ],
+    answer: 1
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const container = document.getElementById("quiz-container");
+const resultDiv = document.getElementById("result");
+
+function showQuestion() {
+  const q = quizData[currentQuestion];
+  container.innerHTML = `
+    <div class="question"><strong>Pregunta ${currentQuestion + 1}:</strong> ${q.question}</div>
+    <div class="options">
+      ${q.options
+        .map(
+          (opt, i) =>
+            `<button onclick="selectAnswer(${i})">${opt}</button>`
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function selectAnswer(selected) {
+  const q = quizData[currentQuestion];
+  const buttons = container.querySelectorAll("button");
+  if (selected === q.answer) {
+    buttons[selected].classList.add("correct");
+    score++;
+  } else {
+    buttons[selected].classList.add("wrong");
+    buttons[q.answer].classList.add("correct");
+  }
+  buttons.forEach(btn => btn.disabled = true);
+
+  currentQuestion++;
+  if (currentQuestion < quizData.length) {
+    setTimeout(() => {
+      showQuestion();
+      resultDiv.textContent = "";
+    }, 1500);
+  } else {
+    setTimeout(() => {
+      container.innerHTML = `<h2>¡Quiz terminado!</h2><p>Tu puntaje es ${score} de ${quizData.length}.</p>`;
+      resultDiv.textContent = "";
+    }, 1500);
+  }
+}
+
+showQuestion();
+</script>
+
+</body>
+</html>
